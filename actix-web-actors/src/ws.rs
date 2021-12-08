@@ -275,7 +275,10 @@ where
             inner: ContextParts::new(mb.sender_producer()),
             messages: VecDeque::new(),
         };
-        ctx.add_stream(WsStream::new(stream, Codec::new()));
+
+        const MAX_FRAME_SIZE: usize = 64_000_000;
+        let codec = Codec::new().max_size(MAX_FRAME_SIZE);
+        ctx.add_stream(WsStream::new(stream, codec));
 
         let addr = ctx.address();
 
